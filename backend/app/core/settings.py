@@ -33,6 +33,9 @@ INSTALLED_APPS = [
     "apps.reports",
 ]
 
+# Database
+USE_SQLITE_FOR_TESTS = env.bool("USE_SQLITE_FOR_TESTS", False)
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -65,14 +68,21 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB", "car_rental"),
-        "USER": env.str("POSTGRES_USER", "car_rental_user"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD", "car_rental_password"),
-        "HOST": env.str("POSTGRES_HOST", "db"),
-        "PORT": env.int("POSTGRES_PORT", 5432),
-    }
+    "default": (
+        {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+        if USE_SQLITE_FOR_TESTS
+        else {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env.str("POSTGRES_DB", "car_rental"),
+            "USER": env.str("POSTGRES_USER", "car_rental_user"),
+            "PASSWORD": env.str("POSTGRES_PASSWORD", "car_rental_password"),
+            "HOST": env.str("POSTGRES_HOST", "db"),
+            "PORT": env.int("POSTGRES_PORT", 5432),
+        }
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -89,6 +99,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
