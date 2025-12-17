@@ -1,0 +1,17 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["core", "apps"]
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I", "B"]
+src = ["app"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = "tests.py test_*.py"
