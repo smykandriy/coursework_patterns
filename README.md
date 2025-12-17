@@ -40,6 +40,19 @@ npm install
 npm run dev
 ```
 
+### Frontend (React + TypeScript)
+- Environment: set `VITE_API_URL` in `frontend/.env` (example in `.env.example` points to `http://localhost:8000/api`).
+- Core tools: Vite + React Router + React Hook Form + Axios + MUI. Auth is JWT-based (SimpleJWT) with automatic token refresh and protected routes per role.
+- Useful scripts:
+  - `npm run dev` — start the Vite dev server (http://localhost:5173).
+  - `npm run build` — type-check + production build.
+  - `npm run lint` — run ESLint.
+
+Screenshots (placeholders):
+- `docs/screenshots/login.png` — Login + registration.
+- `docs/screenshots/cars.png` — Cars listing + detail/quote flow.
+- `docs/screenshots/bookings.png` — Customer bookings + manager queue.
+
 ### Seeding
 Seed demo data (users, cars, pricing rules, sample booking):
 ```bash
@@ -54,7 +67,7 @@ Demo credentials:
 
 ## Architecture Overview
 - **Backend**: Django 5 + DRF + SimpleJWT, structured under `backend/app` with domain apps (`users`, `cars`, `bookings`, `pricing`, `payments`, `reports`, `common`). Settings pull configuration from environment variables and enable CORS and JWT authentication. A minimal `/api/health/` endpoint is available for sanity checks.
-- **Frontend**: React + TypeScript (Vite) with React Router and Material UI. Routes for Login, Register, Cars, My Bookings, and Admin are scaffolded as placeholders. API access flows through a shared axios client using `VITE_API_URL`.
+- **Frontend**: React + TypeScript (Vite) with React Router and Material UI. The app includes auth (login/register, JWT refresh), public vehicle browsing with quotes/booking, customer booking detail pages, and manager/admin tools for car CRUD plus booking queue controls. API access flows through a shared axios client using `VITE_API_URL`.
 - **Docker**: `docker-compose.yml` orchestrates Postgres, backend, and frontend services with a shared database volume.
 - **Quality Tooling**: Ruff/Black/Isort configurations for Python and ESLint/Prettier for the frontend; pytest scaffold for future backend tests.
 
