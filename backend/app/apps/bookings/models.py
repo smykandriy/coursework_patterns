@@ -16,7 +16,9 @@ class Booking(models.Model):
         CANCELED = "canceled", "Canceled"
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bookings")
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bookings"
+    )
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="bookings")
     start_date = models.DateField()
     end_date = models.DateField()

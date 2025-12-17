@@ -37,7 +37,9 @@ class BookingService:
             raise ValueError("End date must be after start date")
         if self.has_overlaps(car, start_date, end_date):
             raise BookingOverlapError("Car already booked for the selected period")
-        return Booking.objects.create(customer=customer, car=car, start_date=start_date, end_date=end_date)
+        return Booking.objects.create(
+            customer=customer, car=car, start_date=start_date, end_date=end_date
+        )
 
     def confirm_booking(self, booking: Booking) -> Booking:
         return self.state_machine.transition(booking, Booking.Status.CONFIRMED)
@@ -51,7 +53,9 @@ class BookingService:
     def cancel_booking(self, booking: Booking) -> Booking:
         return self.state_machine.transition(booking, Booking.Status.CANCELED)
 
-    def apply_fine(self, booking: Booking, fine_type: str, amount: Decimal, notes: str = "") -> Fine:
+    def apply_fine(
+        self, booking: Booking, fine_type: str, amount: Decimal, notes: str = ""
+    ) -> Fine:
         fine = Fine.objects.create(booking=booking, type=fine_type, amount=amount, notes=notes)
         event_bus.publish(FINE_APPLIED, fine)
         return fine

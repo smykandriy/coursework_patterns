@@ -20,12 +20,16 @@ class InvoiceBuilder:
 
     def add_pricing_breakdown(self, breakdown: Iterable[dict]) -> None:
         for item in breakdown:
-            self.add_charge(item.get("name", "Charge"), item.get("amount", 0), item.get("metadata", {}))
+            self.add_charge(
+                item.get("name", "Charge"), item.get("amount", 0), item.get("metadata", {})
+            )
 
     def add_fines(self, fines: Iterable) -> None:
         for fine in fines:
             self.add_charge(
-                f"Fine: {fine.get_type_display()}", fine.amount, {"type": fine.type, "fine_id": str(fine.id)}
+                f"Fine: {fine.get_type_display()}",
+                fine.amount,
+                {"type": fine.type, "fine_id": str(fine.id)},
             )
 
     def build(self) -> Invoice:

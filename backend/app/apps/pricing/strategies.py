@@ -55,7 +55,9 @@ class PricingResult:
 
 
 class PricingStrategy:
-    def apply(self, context: PricingContext, result: PricingResult) -> None:  # pragma: no cover - interface
+    def apply(
+        self, context: PricingContext, result: PricingResult
+    ) -> None:  # pragma: no cover - interface
         raise NotImplementedError
 
 
@@ -136,4 +138,6 @@ class SeasonalStrategy(PricingStrategy):
             adjustment = result.total * (multiplier - 1)
             if adjustment == 0:
                 continue
-            result.add_item(rule.name or self.label, adjustment, metadata={"multiplier": float(multiplier)})
+            result.add_item(
+                rule.name or self.label, adjustment, metadata={"multiplier": float(multiplier)}
+            )

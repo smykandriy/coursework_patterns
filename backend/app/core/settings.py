@@ -1,3 +1,5 @@
+import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -5,6 +7,9 @@ from environs import Env
 
 env = Env()
 env.read_env()
+TESTING = any(
+    arg in ("test", "pytest") or "pytest" in arg or arg.startswith("-k") for arg in sys.argv
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,7 +39,9 @@ INSTALLED_APPS = [
 ]
 
 # Database
-USE_SQLITE_FOR_TESTS = env.bool("USE_SQLITE_FOR_TESTS", False)
+USE_SQLITE_FOR_TESTS = env.bool(
+    "USE_SQLITE_FOR_TESTS", TESTING or "PYTEST_CURRENT_TEST" in os.environ
+)
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -106,8 +113,11 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
